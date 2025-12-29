@@ -51,7 +51,6 @@ const App = () => {
                     <div className="text-center mb-10">
                         <div className="w-16 h-16 border border-yellow-600/50 rounded-full flex items-center justify-center font-light text-yellow-500 text-2xl mx-auto mb-6">L</div>
                         <h1 className="royal-font text-3xl font-bold tracking-tighter uppercase italic">Imperial Login</h1>
-                        <p className="text-[8px] mono text-yellow-500/40 uppercase tracking-[0.5em] mt-2">Access Restricted to Zenith Personnel</p>
                     </div>
                     <form onSubmit={handleLogin} className="space-y-6">
                         <input type="text" required className="w-full bg-white/5 border border-yellow-900/20 rounded-full px-6 py-4 outline-none focus:border-yellow-500/50 text-sm mono" placeholder="PERSONNEL ID" />
@@ -68,71 +67,128 @@ const App = () => {
             <div className="bg-gradient-fixed"></div>
             <div className="scan-beam"></div>
 
-            {/* Top Ticker */}
-            <div className="fixed top-0 w-full bg-black/40 backdrop-blur-xl py-2 z-[100] border-b border-yellow-900/10">
-                <div className="ticker-move flex gap-12 text-[8px] font-mono text-yellow-500/40 uppercase whitespace-nowrap items-center">
-                    {Array(4).fill(companies).flat().map((c, i) => (
-                        <span key={i} className="flex items-center gap-2">
-                            <span className="w-1 h-1 bg-emerald-500 rounded-full animate-pulse"></span>
-                            {c.name}: <span className="text-white/80">{c.pay}/mo</span>
-                        </span>
-                    ))}
-                </div>
-            </div>
-
-            {/* Navigation */}
+            {/* Navigation (Fixed Header) */}
             <nav className="fixed top-10 w-full px-8 md:px-20 flex justify-between items-center z-50">
-                <div className="flex items-center gap-5 cursor-pointer group" onClick={() => setView('hero')}>
-                    <div className="w-10 h-10 border border-yellow-600/50 rounded-full flex items-center justify-center font-light text-yellow-500 text-lg group-hover:bg-yellow-600 group-hover:text-black transition-all duration-500">L</div>
-                    <div>
-                        <h1 className="royal-font text-xl font-bold tracking-widest">LUMEN<span className="text-yellow-500 font-light italic">PATH</span></h1>
-                        <p className="text-[7px] mono text-yellow-500/40 uppercase tracking-[0.5em]">Imperial AI Interface v2.5</p>
-                    </div>
+                <div className="flex items-center gap-5 cursor-pointer" onClick={() => setView('hero')}>
+                    <div className="w-10 h-10 border border-yellow-600/50 rounded-full flex items-center justify-center text-yellow-500 text-lg">L</div>
+                    <h1 className="royal-font text-xl font-bold tracking-widest uppercase">LumenPath</h1>
                 </div>
-                <div className="hidden md:flex gap-10 text-[9px] font-bold uppercase tracking-[0.4em] text-white/30">
-                    {['Market Nodes', 'Compare', 'Trajectory', 'Dojo', 'Logout'].map(item => (
+                <div className="hidden md:flex gap-8 text-[9px] font-bold uppercase tracking-widest text-white/30">
+                    {['Market Nodes', 'Compare', 'Trajectory', 'Dojo'].map(item => (
                         <button key={item} 
-                            onClick={() => item === 'Logout' ? setIsLoggedIn(false) : setView(item.toLowerCase().replace(' ', ''))}
+                            onClick={() => setView(item.toLowerCase().replace(' ', ''))}
                             className={`hover:text-yellow-500 transition-colors ${view === item.toLowerCase().replace(' ', '') ? 'text-yellow-500' : ''}`}>
                             {item}
                         </button>
                     ))}
+                    <button onClick={() => setIsLoggedIn(false)} className="hover:text-red-500">Logout</button>
                 </div>
-                <button onClick={() => setView('subscriptions')} className="shimmer bg-white/5 border border-yellow-600/30 text-yellow-500 px-6 py-2.5 rounded-full text-[9px] font-bold uppercase tracking-[0.2em] hover:bg-yellow-600 hover:text-black transition-all">Upgrade Tier</button>
             </nav>
 
             <main className="pt-40 px-6 max-w-7xl mx-auto pb-32">
-                {/* Views are rendered conditionally based on state */}
+                
+                {/* HERO VIEW */}
                 {view === 'hero' && (
                     <div className="view-transition text-center max-w-4xl mx-auto">
-                        <div className="glass-3d p-16 md:p-24 rounded-[60px] relative overflow-hidden">
-                            <h2 className="royal-font text-6xl md:text-8xl font-bold mb-8 leading-tight italic">Synthesis</h2>
-                            <p className="text-white/40 mb-12 text-[10px] mono tracking-[0.6em] uppercase">Define your coordinate in the AI landscape</p>
-                            <div className="relative max-w-2xl mx-auto">
-                                <input className="w-full bg-black/40 border-b border-yellow-900/50 px-8 py-6 outline-none text-yellow-500 mono text-xl placeholder:text-yellow-900/30 focus:border-yellow-500 transition-all text-center" placeholder="ENTER DESIGNATION..." value={searchRole} onChange={(e) => setSearchRole(e.target.value)} />
-                                <button onClick={() => setView('marketnodes')} className="mt-10 bg-yellow-600 text-black px-12 py-4 rounded-full font-bold uppercase tracking-widest text-[10px] hover:bg-yellow-400 transition-all shadow-xl">Initialize Protocol</button>
+                        <div className="glass-3d p-24 rounded-[60px]">
+                            <h2 className="royal-font text-6xl md:text-8xl font-bold mb-8 italic">Synthesis</h2>
+                            <input className="w-full bg-transparent border-b border-yellow-900/50 py-4 outline-none text-yellow-500 text-center text-2xl" placeholder="DESIGNATION..." value={searchRole} onChange={(e) => setSearchRole(e.target.value)} />
+                            <button onClick={() => setView('marketnodes')} className="mt-10 bg-yellow-600 text-black px-12 py-4 rounded-full font-bold text-[10px] uppercase tracking-widest">Initialize</button>
+                        </div>
+                    </div>
+                )}
+
+                {/* COMPARE VIEW */}
+                {view === 'compare' && (
+                    <div className="view-transition space-y-12">
+                        <h2 className="royal-font text-5xl font-bold text-center text-yellow-500 italic">Comparison Matrix</h2>
+                        <div className="glass-3d rounded-[40px] overflow-hidden">
+                            <table className="w-full text-left">
+                                <thead className="bg-white/5 text-yellow-500 uppercase text-[10px] tracking-widest">
+                                    <tr>
+                                        <th className="p-8">Designation</th>
+                                        <th className="p-8">Compensation</th>
+                                        <th className="p-8">India Demand</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="mono text-xs">
+                                    {companies.map(c => (
+                                        <tr key={c.id} className="border-b border-white/5">
+                                            <td className="p-8">{c.name}</td>
+                                            <td className="p-8 text-emerald-500">{c.pay}</td>
+                                            <td className="p-8">{c.indiaDemand}%</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
+
+                {/* TRAJECTORY VIEW */}
+                {view === 'trajectory' && (
+                    <div className="view-transition grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {companies.map(co => (
+                            <div key={co.id} className="glass-3d p-8 rounded-[40px]">
+                                <h3 className="royal-font text-2xl font-bold mb-8">{co.name}</h3>
+                                <div className="flex items-end h-40 gap-2">
+                                    {co.growth.map((h, i) => (
+                                        <div key={i} className="flex-1 bg-yellow-600/40 rounded-t-md bar-anim" style={{height: `${h}%`}}></div>
+                                    ))}
+                                </div>
+                                <div className="flex justify-between mt-4 text-[8px] mono text-white/30 uppercase">
+                                    <span>Intern</span><span>Junior</span><span>Senior</span><span>Architect</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {/* DOJO VIEW */}
+                {view === 'dojo' && (
+                    <div className="view-transition space-y-12">
+                        <div className="flex justify-center gap-4">
+                            {['WebDev', 'DataScience'].map(type => (
+                                <button key={type} onClick={() => setActiveSkillSet(type)} className={`px-6 py-2 rounded-full text-[10px] uppercase font-bold ${activeSkillSet === type ? 'bg-yellow-600 text-black' : 'bg-white/5 text-white/40'}`}>
+                                    {type}
+                                </button>
+                            ))}
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                            <div className="space-y-6">
+                                {skillComparison[activeSkillSet].map(skill => (
+                                    <div key={skill.name}>
+                                        <div className="flex justify-between text-[10px] mb-2 uppercase"><span>{skill.name}</span><span className="text-yellow-500">{skill.target}% Target</span></div>
+                                        <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                                            <div className="h-full bg-yellow-500/50" style={{width: `${skill.target}%`}}></div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="glass-3d p-12 rounded-[50px] text-center">
+                                <div className="w-20 h-20 border border-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6 animate-spin-slow">Z</div>
+                                <h3 className="royal-font text-2xl italic">Evolution Analysis</h3>
+                                <p className="text-sm text-white/40 mt-4">Profile is 42% Aligned with Zenith Protocols.</p>
                             </div>
                         </div>
                     </div>
                 )}
-                
-                {/* Additional views (compare, trajectory, dojo, marketnodes, subscriptions) follow the same conditional pattern from your source... */}
-                {/* Simplified Market Nodes View for brevity in example */}
+
+                {/* MARKET NODES VIEW */}
                 {view === 'marketnodes' && (
-                    <div className="view-transition space-y-10">
-                        <div className="text-center">
-                            <h2 className="royal-font text-4xl font-bold mb-2 italic text-yellow-500">Global Node Market</h2>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {companies.map(c => (
-                                <div key={c.id} className="glass-3d p-8 rounded-3xl">
-                                    <h3 className="royal-font text-2xl font-bold">{c.name}</h3>
-                                    <span className="text-emerald-500 mono text-[10px]">{c.pay}</span>
+                    <div className="view-transition grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {companies.map(c => (
+                            <div key={c.id} className="glass-3d p-8 rounded-3xl">
+                                <div className="flex justify-between items-start mb-4">
+                                    <h3 className="royal-font text-xl font-bold">{c.name}</h3>
+                                    <span className="text-emerald-500 text-[10px]">{c.pay}</span>
                                 </div>
-                            ))}
-                        </div>
+                                <p className="text-[10px] text-white/40 uppercase mono">{c.focus}</p>
+                            </div>
+                        ))}
                     </div>
                 )}
+
             </main>
         </div>
     );
